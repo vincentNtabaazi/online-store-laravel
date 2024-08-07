@@ -14,18 +14,28 @@ class Product extends Model
      * $this->attributes['image'] - string - contains the product image
      * $this->attributes['price'] - int - contains the product price
      * $this->attributes['created_at'] - timestamp - contains the product creation date * $this->attributes['updated_at'] - timestamp - contains the product update date */
-    
-     public static function validate($request) 
-     {
+
+    public static function validate($request)
+    {
         $request->validate([
-        "name" => "required|max:255",
-        "description" => "required", 
-        "price" => "required|numeric|gt:0", 
-        'image' => 'image',
-        ]); 
+            "name" => "required|max:255",
+            "description" => "required",
+            "price" => "required|numeric|gt:0",
+            'image' => 'image',
+        ]);
     }
 
-     public function getId()
+
+    public static function sumPricesByQuantities($products, $productsInSession)
+    {
+        $total = 0;
+        foreach ($products as $product) {
+            $total = $total + ($product->getPrice() * $productsInSession[$product->getId()]);
+        }
+        return $total;
+    }
+
+    public function getId()
     {
         return $this->attributes['id'];
     }
@@ -55,43 +65,43 @@ class Product extends Model
         $this->attributes['description'] = $description;
     }
 
-    public function getImage() 
+    public function getImage()
     {
-        return $this->attributes['image']; 
-    }
-        
-    public function setImage($image) 
-    {
-        $this->attributes['image'] = $image; 
-    }
-        
-    public function getPrice() 
-    {
-        return $this->attributes['price']; 
-    }
-        
-    public function setPrice($price) 
-    {
-        $this->attributes['price'] = $price; 
-    }
-        
-    public function getCreatedAt() 
-    {
-        return $this->attributes['created_at']; 
-    }
-        
-    public function setCreatedAt($createdAt) 
-    {
-        $this->attributes['created_at'] = $createdAt; 
+        return $this->attributes['image'];
     }
 
-    public function getUpdatedAt() 
+    public function setImage($image)
     {
-        return $this->attributes['updated_at']; 
+        $this->attributes['image'] = $image;
     }
-        
-    public function setUpdatedAt($updatedAt) 
+
+    public function getPrice()
     {
-        $this->attributes['updated_at'] = $updatedAt; 
+        return $this->attributes['price'];
+    }
+
+    public function setPrice($price)
+    {
+        $this->attributes['price'] = $price;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->attributes['created_at'] = $createdAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->attributes['updated_at'];
+    }
+
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->attributes['updated_at'] = $updatedAt;
     }
 }
